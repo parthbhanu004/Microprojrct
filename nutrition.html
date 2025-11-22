@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MealMate · Nutrition</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div class="logo-badge">MM</div>
+        <div class="logo">MealMate</div>
+      </div>
+
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="meals.html">Meal Tracking</a>
+        <a href="nutrition.html" class="active">Nutrition</a>
+      </nav>
+
+      <div class="header-right">
+        <div id="greeting3" style="font-weight:600;color:var(--muted);font-size:14px;">Welcome!</div>
+        <div class="clock" id="liveClock3">Loading time...</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding:28px 0 80px;">
+    <h2 style="margin:0 0 16px 0; color:#FF6F91;">🥗 Nutrition Information</h2>
+
+    <p style="color:var(--muted);margin:0 0 18px 0;">Learn the basics of calories and simple tips to create balanced meals. Saved meals appear below.</p>
+
+    <section class="card" style="margin-bottom:22px;">
+      <table class="styled-table" id="mealsTable">
+        <thead>
+          <tr><th>Meal Name</th><th>Food Item</th><th>Calories</th><th>Food Waste</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h3 style="margin:0 0 10px 0;">Quick Nutrition Tips</h3>
+      <ul style="margin:0;padding-left:18px;color:var(--muted);">
+        <li>Include protein (eggs, pulses, dairy) in every meal for growth.</li>
+        <li>Fruits & vegetables provide fiber and essential vitamins.</li>
+        <li>Limit sugary drinks and deep-fried snacks.</li>
+        <li>Share leftovers and avoid excess portions to reduce waste.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">MealMate | Nutrition Insights</div>
+  </footer>
+
+  <script>
+    // clock
+    function updateClock3(){
+      const el = document.getElementById('liveClock3');
+      const g = document.getElementById('greeting3');
+      const now = new Date();
+      el.textContent = now.toLocaleDateString(undefined,{weekday:'short', month:'short', day:'numeric'}) + ' · ' + now.toLocaleTimeString();
+      const h = now.getHours();
+      g.textContent = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+    }
+    updateClock3(); setInterval(updateClock3,1000);
+
+    // load meals to table
+    function escapeHtml(str){ return String(str).replace(/[&<>"']/g, s=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[s])); }
+    function renderMeals(){
+      const tbody = document.querySelector('#mealsTable tbody');
+      tbody.innerHTML = '';
+      const meals = JSON.parse(localStorage.getItem('meals')) || [];
+      if(meals.length === 0){
+        tbody.innerHTML = '<tr><td colspan="4" style="color:var(--muted);padding:18px 14px;">No meals saved yet — add a meal on Meal Tracking page.</td></tr>';
+        return;
+      }
+      meals.forEach(m=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${escapeHtml(m.mealName)}</td><td>${escapeHtml(m.foodItem)}</td><td>${escapeHtml(m.calories)}</td><td>${escapeHtml(m.waste)}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    renderMeals();
+  </script>
+</body>
+</html>

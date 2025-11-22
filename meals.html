@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MealMate · Meal Tracking</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div class="logo-badge">MM</div>
+        <div class="logo">MealMate</div>
+      </div>
+
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="meals.html" class="active">Meal Tracking</a>
+        <a href="nutrition.html">Nutrition</a>
+      </nav>
+
+      <div class="header-right">
+        <div id="greeting2" style="font-weight:600;color:var(--muted);font-size:14px;">Welcome!</div>
+        <div class="clock" id="liveClock2">Loading time...</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding:28px 0 60px;">
+    <h2 style="margin:0 0 16px 0; color:#FF6F91;">🍽 Daily Meal Tracking</h2>
+
+    <form class="card meal-form" id="mealForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="meal-name">Meal Name</label>
+          <input id="meal-name" name="meal-name" type="text" placeholder="e.g., Lunch" required />
+        </div>
+
+        <div class="form-group">
+          <label for="food-item">Food Item</label>
+          <input id="food-item" name="food-item" type="text" placeholder="e.g., Rice & vegetables" required />
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top:6px;">
+        <div class="form-group">
+          <label for="calories">Calories</label>
+          <input id="calories" name="calories" type="number" placeholder="e.g., 450" required />
+        </div>
+
+        <div class="form-group">
+          <label for="waste">Wasted Food?</label>
+          <select id="waste" name="waste" required>
+            <option value="">Select</option>
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <label for="meal-image">Upload Meal Image (optional)</label>
+        <input id="meal-image" type="file" accept="image/*" />
+      </div>
+
+      <div style="margin-top:16px;display:flex;gap:12px;">
+        <button class="btn" id="submitBtn" type="submit">Submit Meal</button>
+        <button class="btn" id="clearBtn" type="button" style="background:linear-gradient(45deg,#EAF7ED,#D4F0D8); color:#1f5a3a;">Clear All</button>
+      </div>
+    </form>
+
+    <section style="margin-top:28px;">
+      <div class="card">
+        <h3 style="margin:0 0 8px 0;">Saved Meals</h3>
+        <div style="overflow:auto;">
+          <table class="styled-table" id="mealsTable">
+            <thead>
+              <tr><th>Meal</th><th>Food Item</th><th>Calories</th><th>Waste</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">MealMate | Meal Tracking</div>
+  </footer>
+
+  <script>
+    // clock
+    function updateClock2(){
+      const el = document.getElementById('liveClock2');
+      const g = document.getElementById('greeting2');
+      const now = new Date();
+      el.textContent = now.toLocaleDateString(undefined,{weekday:'short', month:'short', day:'numeric'}) + ' · ' + now.toLocaleTimeString();
+      const h = now.getHours();
+      g.textContent = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+    }
+    updateClock2(); setInterval(updateClock2,1000);
+
+    // form handling
+    const form = document.getElementById('mealForm');
+    const tableBody = document.querySelector("#mealsTable tbody");
+
+    function renderMeals(){
+      tableBody.innerHTML = '';
+      const meals = JSON.parse(localStorage.getItem('meals')) || [];
+      meals.forEach(m=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${escapeHtml(m.mealName)}</td>
+                        <td>${escapeHtml(m.foodItem)}</td>
+                        <td>${escapeHtml(m.calories)}</td>
+                        <td>${escapeHtml(m.waste)}</td>`;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    function escapeHtml(str){ return String(str).replace(/[&<>"']/g, s=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[s])); }
+
+    form.addEventListener('submit', e=>{
+      e.preventDefault();
+      const mealName = document.getElementById('meal-name').value.trim();
+      const foodItem = document.getElementById('food-item').value.trim();
+      const calories = document.getElementById('calories').value.trim();
+      const waste = document.getElementById('waste').value;
+
+      if(!mealName || !foodItem || !calories || !waste){ alert('Please fill all required fields'); return; }
+
+      const meals = JSON.parse(localStorage.getItem('meals')) || [];
+      meals.push({mealName, foodItem, calories, waste});
+      localStorage.setItem('meals', JSON.stringify(meals));
+      renderMeals();
+      form.reset();
+      document.getElementById('meal-name').focus();
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', ()=>{
+      if(confirm('Clear all saved meals?')){ localStorage.removeItem('meals'); renderMeals(); }
+    });
+
+    // init
+    renderMeals();
+  </script>
+</body>
+</html>

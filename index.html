@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MealMate · Home</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* Marquee styling to match your pastel aesthetic */
+    .top-marquee {
+      width: 100%;
+      overflow: hidden;
+      background: linear-gradient(90deg, #FFB6B9, #FAE3D9);
+      color: white;
+      padding: 10px 0;
+      font-weight: 600;
+      font-size: 16px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+      white-space: nowrap;
+    }
+
+    .top-marquee span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marqueeSlide 12s linear infinite;
+    }
+
+    @keyframes marqueeSlide {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ⭐ TOP MARQUEE ADDED ⭐ -->
+  <div class="top-marquee">
+    <span>Welcome to MealMate — Smarter Meals, Healthier Students, Zero Food Waste! ⭐</span>
+  </div>
+
+  <header>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div class="logo-badge">MM</div>
+        <div class="logo">MealMate</div>
+      </div>
+
+      <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="meals.html">Meal Tracking</a>
+        <a href="nutrition.html">Nutrition</a>
+      </nav>
+
+      <div class="header-right">
+        <div id="greeting" style="font-weight:600;color:var(--muted);font-size:14px;">Welcome!</div>
+        <div class="clock" id="liveClock">Loading time...</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding:26px 0;">
+    <section class="hero">
+      <div class="hero-left">
+        <h2>Smart Meal Tracking for Schools</h2>
+        <p>Reduce food waste, encourage healthy choices and keep meal records — simple, visual and fun for students and staff.</p>
+
+        <div class="cta-row" style="margin-top:18px;">
+          <a class="btn" href="meals.html">Start Tracking</a>
+          <a class="btn" href="nutrition.html" style="background:linear-gradient(45deg,#DDEFCC,#BFF0C9); color:#1f5a3a;">Nutrition Insights</a>
+        </div>
+
+        <div style="margin-top:20px;color:var(--muted);font-size:14px;">
+          <strong>Tip:</strong> Add meals on the Meal Tracking page. View aggregated nutrition on Nutrition page.
+        </div>
+      </div>
+
+      <div class="hero-card" aria-hidden="true">
+        <img src="C:\Users\Dharmik Bhanushali\OneDrive\Desktop\Micro project\WhatsApp Image 2025-11-22 at 08.18.33_6f6e6bc2.jpg" alt="Box of vegetables" class="hero-img" />
+      </div>
+    </section>
+
+    <section class="features" style="margin-top:20px;">
+      <div class="feature-list" style="flex:1;">
+        <div class="feature-card" role="article">
+          <div style="font-size:20px;">📊 Track Meals</div>
+          <span class="sub">Log daily meals with a click</span>
+        </div>
+
+        <div class="feature-card" role="article">
+          <div style="font-size:20px;">🥗 Detailed Nutrition</div>
+          <span class="sub">Calories & simple tips</span>
+        </div>
+
+        <div class="feature-card" role="article">
+          <div style="font-size:20px;">♻️ Reduce Food Waste</div>
+          <span class="sub">Encourage mindful serving</span>
+          <div style="margin-top:8px;color:#ff1744;font-weight:700;font-size:13px;">Do Not Waste Food!</div>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top:26px; display:flex; gap:18px; align-items:stretch; flex-wrap:wrap;">
+      <div class="card" style="flex:1; min-width:260px;">
+        <h3 style="margin:0 0 8px 0;">Why MealMate?</h3>
+        <p style="margin:0;color:var(--muted);">A friendly tool built to help schools manage meals, reduce waste, and teach kids about nutrition.</p>
+      </div>
+
+      <div class="card" style="width:320px; text-align:center;">
+        <h3 style="margin:0 0 6px 0;">Designed for SDG 2</h3>
+        <p style="margin:0;color:var(--muted);font-size:14px;">Contributes to Zero Hunger goals by encouraging responsible food use.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      © 2025 MealMate · Built with ♥ for healthy meals
+    </div>
+  </footer>
+
+  <!-- Live clock + greeting script -->
+  <script>
+    function updateClock(){
+      const el = document.getElementById('liveClock');
+      const g = document.getElementById('greeting');
+      const now = new Date();
+      const dateStr = now.toLocaleDateString(undefined, {weekday:'short', year:'numeric', month:'short', day:'numeric'});
+      const timeStr = now.toLocaleTimeString();
+      el.textContent = dateStr + ' · ' + timeStr;
+
+      const hour = now.getHours();
+      let greet = 'Welcome!';
+      if(hour < 12) greet = 'Good morning';
+      else if(hour < 17) greet = 'Good afternoon';
+      else greet = 'Good evening';
+      g.textContent = greet;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+
+</body>
+</html>
